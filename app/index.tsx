@@ -1,15 +1,51 @@
-import { Text, View } from "react-native";
+import { Link } from "expo-router";
+import { StyleSheet, Text, View } from "react-native";
 
-export default function Index() {
+export default function IndexScreen() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
+    <View style={styles.container}>
+      <View style={styles.content}>
+        <Text style={styles.title}>献立提案アプリへようこそ</Text>
+        <Text style={styles.subtitle}>
+          まずはサインアップしてアカウントを作成しましょう。
+        </Text>
+        <Link href="/sign-up" style={styles.link} role="button">
+          サインアップ画面へ進む
+        </Link>
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 24,
+    backgroundColor: "#FFFFFF",
+  },
+  content: {
+    width: "100%",
+    maxWidth: 320,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "700",
+    marginBottom: 16,
+    color: "#222222",
+  },
+  subtitle: {
+    fontSize: 16,
+    marginBottom: 24,
+    color: "#555555",
+  },
+  link: {
+    backgroundColor: "#007AFF",
+    color: "#FFFFFF",
+    fontWeight: "600",
+    textAlign: "center",
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+});
