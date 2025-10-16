@@ -12,6 +12,9 @@ export default function IndexScreen() {
         <Link href="/sign-up" style={styles.link} role="button">
           サインアップ画面へ進む
         </Link>
+        <Link href="/login" style={styles.secondaryLink} role="button">
+          ログイン画面へ進む
+        </Link>
       </View>
     </View>
   );
@@ -47,5 +50,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingVertical: 12,
     borderRadius: 8,
+  },
+  secondaryLink: {
+    marginTop: 16,
+    color: "#007AFF",
+    fontWeight: "600",
+    textAlign: "center",
+    paddingVertical: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#007AFF",
   },
 });

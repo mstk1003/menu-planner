@@ -1,7 +1,6 @@
 import * as QueryParams from "expo-auth-session/build/QueryParams";
 import * as Linking from "expo-linking";
 import { useRouter } from "expo-router";
-import { useCallback } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -9,8 +8,6 @@ import { supabase } from "@/lib/supabase";
 
 const createSessionFromUrl = async (url: string) => {
   const { params, errorCode } = QueryParams.getQueryParams(url);
-  console.log("params", params);
-  console.log("errorCode", errorCode);
   if (errorCode) {
     throw new Error(errorCode);
   }
@@ -34,9 +31,9 @@ export default function AuthCallbackScreen() {
     createSessionFromUrl(url);
   }
 
-  const handleOpenLogin = useCallback(() => {
-    router.replace("/");
-  }, [router]);
+  const handleOpenLogin = () => {
+    router.replace("/login");
+  };
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>

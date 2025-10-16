@@ -1,3 +1,4 @@
+import { Link, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import {
   ActivityIndicator,
@@ -14,44 +15,38 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { MIN_PASSWORD_LENGTH } from "@/constants/auth";
 import { supabase } from "@/lib/supabase";
 
-export default function SignUpScreen() {
+export default function LoginScreen() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const isSignUpDisabled = useMemo(() => {
+  const isLoginDisabled = useMemo(() => {
     return !email.trim() || password.length < MIN_PASSWORD_LENGTH || isLoading;
   }, [email, isLoading, password.length]);
 
-  const handleSignUp = async () => {
-    if (isSignUpDisabled) {
+  const handleLogin = async () => {
+    if (isLoginDisabled) {
       return;
     }
 
     setIsLoading(true);
     setErrorMessage(null);
-    setSuccessMessage(null);
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password,
-        options: {
-          emailRedirectTo: "menuplanner://auth/callback",
-        },
       });
 
       if (error) {
-        setErrorMessage(error.message ?? "サインアップに失敗しました。");
+        setErrorMessage(error.message ?? "ログインに失敗しました。");
         return;
       }
+      console.log("sesstion", data.session);
 
-      setSuccessMessage(
-        "確認メールを送信しました。メールに記載された手順に従ってサインアップを完了してください。"
-      );
-      setPassword("");
+      router.replace("/");
     } catch (error) {
       const message =
         error instanceof Error
@@ -70,7 +65,7 @@ export default function SignUpScreen() {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <View style={styles.inner}>
-          <Text style={styles.title}>新規登録</Text>
+          <Text style={styles.title}>ログイン</Text>
 
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>メールアドレス</Text>
@@ -94,7 +89,7 @@ export default function SignUpScreen() {
               autoCapitalize="none"
               autoComplete="password"
               autoCorrect={false}
-              placeholder="8文字以上で入力してください"
+              placeholder="パスワードを入力してください"
               placeholderTextColor="#8A8A8A"
               secureTextEntry
               style={styles.input}
@@ -102,35 +97,34 @@ export default function SignUpScreen() {
               value={password}
               onChangeText={setPassword}
             />
-            <Text style={styles.hint}>
-              英数字を組み合わせた{MIN_PASSWORD_LENGTH}
-              文字以上のパスワードを設定してください。
-            </Text>
           </View>
 
           {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
 
-          {successMessage && (
-            <Text style={styles.successText}>{successMessage}</Text>
-          )}
-
           <Pressable
-            accessibilityLabel="サインアップ"
+            accessibilityLabel="ログイン"
             accessibilityRole="button"
-            disabled={isSignUpDisabled}
-            onPress={handleSignUp}
+            disabled={isLoginDisabled}
+            onPress={handleLogin}
             style={({ pressed }) => [
               styles.submitButton,
-              isSignUpDisabled && styles.submitButtonDisabled,
-              pressed && !isSignUpDisabled && styles.submitButtonPressed,
+              isLoginDisabled && styles.submitButtonDisabled,
+              pressed && !isLoginDisabled && styles.submitButtonPressed,
             ]}
           >
             {isLoading ? (
               <ActivityIndicator color="#FFFFFF" />
             ) : (
-              <Text style={styles.submitText}>登録する</Text>
+              <Text style={styles.submitText}>ログインする</Text>
             )}
           </Pressable>
+
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>アカウントをお持ちでない場合</Text>
+            <Link href="/sign-up" style={styles.footerLink} role="link">
+              新規登録はこちら
+            </Link>
+          </View>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -175,20 +169,10 @@ const styles = StyleSheet.create({
     color: "#222222",
     backgroundColor: "#FFFFFF",
   },
-  hint: {
-    marginTop: 8,
-    fontSize: 12,
-    color: "#777777",
-  },
   errorText: {
     marginBottom: 16,
     fontSize: 14,
     color: "#C62828",
-  },
-  successText: {
-    marginBottom: 16,
-    fontSize: 14,
-    color: "#2E7D32",
   },
   submitButton: {
     height: 48,
@@ -207,5 +191,19 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontWeight: "600",
     fontSize: 16,
+  },
+  footer: {
+    marginTop: 32,
+    alignItems: "center",
+  },
+  footerText: {
+    fontSize: 14,
+    color: "#555555",
+    marginBottom: 8,
+  },
+  footerLink: {
+    color: "#007AFF",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
