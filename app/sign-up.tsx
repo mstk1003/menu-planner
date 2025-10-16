@@ -39,6 +39,9 @@ export default function SignUpScreen() {
       const { error } = await supabase.auth.signUp({
         email: email.trim(),
         password,
+        options: {
+          emailRedirectTo: "menuplanner://auth/callback",
+        },
       });
 
       if (error) {
@@ -101,13 +104,12 @@ export default function SignUpScreen() {
               onChangeText={setPassword}
             />
             <Text style={styles.hint}>
-              英数字を組み合わせた{MIN_PASSWORD_LENGTH}文字以上のパスワードを設定してください。
+              英数字を組み合わせた{MIN_PASSWORD_LENGTH}
+              文字以上のパスワードを設定してください。
             </Text>
           </View>
 
-          {errorMessage && (
-            <Text style={styles.errorText}>{errorMessage}</Text>
-          )}
+          {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
 
           {successMessage && (
             <Text style={styles.successText}>{successMessage}</Text>

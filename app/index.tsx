@@ -5,7 +5,7 @@ export default function IndexScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>献立提案アプリへようこそ</Text>
+        <Text style={styles.title}>献立提案アプリへようこそ！</Text>
         <Text style={styles.subtitle}>
           まずはサインアップしてアカウントを作成しましょう。
         </Text>
