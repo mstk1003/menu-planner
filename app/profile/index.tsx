@@ -1,9 +1,3 @@
-import FormTextInput from "@/components/FormTextInput";
-import OptionGroup, { type OptionGroupOption } from "@/components/OptionGroup";
-import PrimaryButton from "@/components/PrimaryButton";
-import Section from "@/components/Section";
-import TextArea from "@/components/TextArea";
-import { useSession } from "@/hooks/useSession";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -12,35 +6,18 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 
-const FAMILY_COMPOSITION_OPTIONS: OptionGroupOption[] = [
-  { label: "一人暮らし", value: "single" },
-  { label: "夫婦のみ", value: "couple" },
-  { label: "小さな子どもあり", value: "young_children" },
-  { label: "中高生あり", value: "teens" },
-  { label: "三世代同居", value: "multi_generation" },
-];
-
-const HEALTH_PRIORITY_OPTIONS: OptionGroupOption[] = [
-  { label: "バランス重視", value: "balanced" },
-  { label: "低糖質", value: "low_carb" },
-  { label: "高たんぱく", value: "high_protein" },
-  { label: "減塩", value: "low_salt" },
-  { label: "時短重視", value: "time_saving" },
-];
-
-const COOKING_SKILL_OPTIONS: OptionGroupOption[] = [
-  { label: "初心者", value: "beginner" },
-  { label: "基礎はOK", value: "intermediate" },
-  { label: "得意", value: "advanced" },
-  { label: "プロ級", value: "expert" },
-];
-
-const DELI_USAGE_OPTIONS: OptionGroupOption[] = [
-  { label: "ほとんど使わない", value: "rarely" },
-  { label: "週1〜2回", value: "weekly" },
-  { label: "週3〜4回", value: "frequent" },
-  { label: "ほぼ毎日", value: "daily" },
-];
+import FormTextInput from "@/components/FormTextInput";
+import OptionGroup from "@/components/OptionGroup";
+import PrimaryButton from "@/components/PrimaryButton";
+import Section from "@/components/Section";
+import TextArea from "@/components/TextArea";
+import {
+  COOKING_SKILL_OPTIONS,
+  DELI_USAGE_OPTIONS,
+  FAMILY_COMPOSITION_OPTIONS,
+  HEALTH_PRIORITY_OPTIONS,
+} from "@/features/profile/constants";
+import { useSession } from "@/hooks/useSession";
 
 export default function ProfileSettingsScreen() {
   const router = useRouter();

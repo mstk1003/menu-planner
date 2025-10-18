@@ -10,7 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import FormTextInput from "@/components/FormTextInput";
 import PrimaryButton from "@/components/PrimaryButton";
-import { MIN_PASSWORD_LENGTH } from "@/constants/auth";
+import { MIN_PASSWORD_LENGTH } from "@/features/auth/constants";
 import { supabase } from "@/lib/supabase";
 
 export default function SignUpScreen() {
