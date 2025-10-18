@@ -1,11 +1,25 @@
 ## プロジェクト構成とモジュール構成
 
 - `app/`: Expo Router のエントリーポイントです。`(tabs)`のようなフォルダでスクリーンをグループ化し、モーダルは兄弟ファイルとして追加してください。
-- `components/`: 再利用可能な UI プリミティブ（例：`ThemedView`, `HelloWave`）を配置します。これらはステートレスで、型付けされている状態を保ってください。
+- `components/`: 再利用可能な UI プリミティブ（例：`FormTextInput`, `TextArea`, `PrimaryButton`, `Section`, `OptionGroup`）を配置します。これらはステートレスで、型付けされている状態を保ってください。
 - `hooks/`: 共有フックを配置します。再利用されない機能固有のロジックは、そのルート（スクリーン）内に配置してください。
 - `constants/`: いわゆるマジックバリューを一元管理し、各スクリーンが 1 つの場所からインポートできるようにします。
+- `features/`: ドメイン単位のロジックやリソースをまとめます。`features/profile/constants.ts` などで画面固有の選択肢を管理し、`features/auth` では認証フロー関連の定数を扱います。
 - `assets/`: `@/assets`エイリアスを通じて読み込まれる、パッケージ化された画像やフォントを配置します。
 - `scripts/reset-project.js`: `app/`ディレクトリをリセットします。Expo のスターターレイアウトに意図的に戻したい場合にのみ実行してください。
+
+### 主要な UI コンポーネント
+
+- `components/FormTextInput.tsx`: 単一行のフォーム入力。共通のスタイルと placeholder 色を提供します。
+- `components/TextArea.tsx`: 複数行入力用のラッパー。`FormTextInput` を拡張し、高さや装飾を統一します。
+- `components/PrimaryButton.tsx`: ローディング状態や無効化を一元管理するプライマリーボタン。
+- `components/Section.tsx`: セクションタイトルや説明文を含むコンテナ。設定画面などで再利用します。
+- `components/OptionGroup.tsx`: 複数選択肢をピル状のボタンで表示する共通 UI。
+
+### 機能単位のリソース
+
+- `features/profile/constants.ts`: プロフィール設定画面の選択肢（家族構成、健康志向など）をまとめています。
+- `features/auth/constants.ts`: 認証関連で共通利用する値を定義します。
 
 ## ビルド、テスト、開発用コマンド
 
