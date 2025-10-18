@@ -1,6 +1,5 @@
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import type { ReactNode } from "react";
 import {
   Alert,
   Pressable,
@@ -15,14 +14,13 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 
+import OptionGroup, {
+  type OptionGroupOption,
+} from "@/components/OptionGroup";
+import Section from "@/components/Section";
 import { useSession } from "@/hooks/useSession";
 
-type Option = {
-  label: string;
-  value: string;
-};
-
-const FAMILY_COMPOSITION_OPTIONS: Option[] = [
+const FAMILY_COMPOSITION_OPTIONS: OptionGroupOption[] = [
   { label: "一人暮らし", value: "single" },
   { label: "夫婦のみ", value: "couple" },
   { label: "小さな子どもあり", value: "young_children" },
@@ -30,7 +28,7 @@ const FAMILY_COMPOSITION_OPTIONS: Option[] = [
   { label: "三世代同居", value: "multi_generation" },
 ];
 
-const HEALTH_PRIORITY_OPTIONS: Option[] = [
+const HEALTH_PRIORITY_OPTIONS: OptionGroupOption[] = [
   { label: "バランス重視", value: "balanced" },
   { label: "低糖質", value: "low_carb" },
   { label: "高たんぱく", value: "high_protein" },
@@ -38,14 +36,14 @@ const HEALTH_PRIORITY_OPTIONS: Option[] = [
   { label: "時短重視", value: "time_saving" },
 ];
 
-const COOKING_SKILL_OPTIONS: Option[] = [
+const COOKING_SKILL_OPTIONS: OptionGroupOption[] = [
   { label: "初心者", value: "beginner" },
   { label: "基礎はOK", value: "intermediate" },
   { label: "得意", value: "advanced" },
   { label: "プロ級", value: "expert" },
 ];
 
-const DELI_USAGE_OPTIONS: Option[] = [
+const DELI_USAGE_OPTIONS: OptionGroupOption[] = [
   { label: "ほとんど使わない", value: "rarely" },
   { label: "週1〜2回", value: "weekly" },
   { label: "週3〜4回", value: "frequent" },
@@ -187,66 +185,6 @@ export default function ProfileSettingsScreen() {
   );
 }
 
-function Section({
-  title,
-  description,
-  children,
-}: {
-  title: string;
-  description?: string;
-  children: ReactNode;
-}) {
-  return (
-    <View style={styles.section}>
-      <Text style={styles.sectionTitle}>{title}</Text>
-      {description ? (
-        <Text style={styles.sectionDescription}>{description}</Text>
-      ) : null}
-      {children}
-    </View>
-  );
-}
-
-function OptionGroup({
-  options,
-  selectedValue,
-  onSelect,
-}: {
-  options: Option[];
-  selectedValue: string | null;
-  onSelect: (value: string) => void;
-}) {
-  return (
-    <View style={styles.optionGroup}>
-      {options.map((option) => {
-        const isSelected = option.value === selectedValue;
-        return (
-          <Pressable
-            key={option.value}
-            onPress={() => onSelect(option.value)}
-            style={({ pressed }) => [
-              styles.optionPill,
-              isSelected && styles.optionPillSelected,
-              pressed && styles.optionPillPressed,
-            ]}
-            accessibilityRole="button"
-            accessibilityLabel={`${option.label}を選択する`}
-          >
-            <Text
-              style={[
-                styles.optionPillText,
-                isSelected && styles.optionPillTextSelected,
-              ]}
-            >
-              {option.label}
-            </Text>
-          </Pressable>
-        );
-      })}
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -268,51 +206,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "#222222",
     marginBottom: 24,
-  },
-  section: {
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#222222",
-    marginBottom: 8,
-  },
-  sectionDescription: {
-    fontSize: 13,
-    color: "#666666",
-    marginBottom: 12,
-  },
-  optionGroup: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginHorizontal: -4,
-  },
-  optionPill: {
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 999,
-    borderWidth: 1,
-    borderColor: "#DDDDDD",
-    backgroundColor: "#FFFFFF",
-    marginHorizontal: 4,
-    marginBottom: 8,
-  },
-  optionPillSelected: {
-    borderColor: "#007AFF",
-    backgroundColor: "#E6F0FF",
-  },
-  optionPillPressed: {
-    opacity: 0.8,
-  },
-  optionPillText: {
-    fontSize: 14,
-    color: "#333333",
-    fontWeight: "500",
-  },
-  optionPillTextSelected: {
-    color: "#0053A4",
-    fontWeight: "700",
   },
   textInput: {
     borderWidth: 1,
