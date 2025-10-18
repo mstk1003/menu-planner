@@ -1,6 +1,6 @@
-# Welcome to your Expo app 👋
+## 本ブランチについて
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+expo + supabase でサインアップ・サインイン・サインアウトの機能のみを持ちます。
 
 ## Get started
 
