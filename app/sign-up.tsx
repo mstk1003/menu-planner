@@ -1,16 +1,15 @@
 import { useMemo, useState } from "react";
 import {
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import FormTextInput from "@/components/FormTextInput";
+import PrimaryButton from "@/components/PrimaryButton";
 import { MIN_PASSWORD_LENGTH } from "@/constants/auth";
 import { supabase } from "@/lib/supabase";
 
@@ -74,14 +73,12 @@ export default function SignUpScreen() {
 
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>メールアドレス</Text>
-            <TextInput
+            <FormTextInput
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect={false}
               keyboardType="email-address"
               placeholder="sample@example.com"
-              placeholderTextColor="#8A8A8A"
-              style={styles.input}
               textContentType="emailAddress"
               value={email}
               onChangeText={setEmail}
@@ -90,14 +87,12 @@ export default function SignUpScreen() {
 
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>パスワード</Text>
-            <TextInput
+            <FormTextInput
               autoCapitalize="none"
               autoComplete="password"
               autoCorrect={false}
               placeholder="8文字以上で入力してください"
-              placeholderTextColor="#8A8A8A"
               secureTextEntry
-              style={styles.input}
               textContentType="password"
               value={password}
               onChangeText={setPassword}
@@ -114,23 +109,14 @@ export default function SignUpScreen() {
             <Text style={styles.successText}>{successMessage}</Text>
           )}
 
-          <Pressable
+          <PrimaryButton
             accessibilityLabel="サインアップ"
-            accessibilityRole="button"
             disabled={isSignUpDisabled}
+            isLoading={isLoading}
+            label="登録する"
             onPress={handleSignUp}
-            style={({ pressed }) => [
-              styles.submitButton,
-              isSignUpDisabled && styles.submitButtonDisabled,
-              pressed && !isSignUpDisabled && styles.submitButtonPressed,
-            ]}
-          >
-            {isLoading ? (
-              <ActivityIndicator color="#FFFFFF" />
-            ) : (
-              <Text style={styles.submitText}>登録する</Text>
-            )}
-          </Pressable>
+            style={styles.submitButton}
+          />
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -165,16 +151,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     color: "#555555",
   },
-  input: {
-    borderWidth: 1,
-    borderColor: "#DDDDDD",
-    borderRadius: 8,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontSize: 16,
-    color: "#222222",
-    backgroundColor: "#FFFFFF",
-  },
   hint: {
     marginTop: 8,
     fontSize: 12,
@@ -191,21 +167,6 @@ const styles = StyleSheet.create({
     color: "#2E7D32",
   },
   submitButton: {
-    height: 48,
-    borderRadius: 8,
-    backgroundColor: "#007AFF",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  submitButtonDisabled: {
-    backgroundColor: "#A3C1FF",
-  },
-  submitButtonPressed: {
-    backgroundColor: "#0B5ED7",
-  },
-  submitText: {
-    color: "#FFFFFF",
-    fontWeight: "600",
-    fontSize: 16,
+    marginTop: 8,
   },
 });

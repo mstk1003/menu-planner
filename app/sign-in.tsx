@@ -1,17 +1,16 @@
 import { Link, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import {
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import FormTextInput from "@/components/FormTextInput";
+import PrimaryButton from "@/components/PrimaryButton";
 import { MIN_PASSWORD_LENGTH } from "@/constants/auth";
 import { supabase } from "@/lib/supabase";
 
@@ -69,14 +68,12 @@ export default function SignInScreen() {
 
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>メールアドレス</Text>
-            <TextInput
+            <FormTextInput
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect={false}
               keyboardType="email-address"
               placeholder="sample@example.com"
-              placeholderTextColor="#8A8A8A"
-              style={styles.input}
               textContentType="emailAddress"
               value={email}
               onChangeText={setEmail}
@@ -85,14 +82,12 @@ export default function SignInScreen() {
 
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>パスワード</Text>
-            <TextInput
+            <FormTextInput
               autoCapitalize="none"
               autoComplete="password"
               autoCorrect={false}
               placeholder="パスワードを入力してください"
-              placeholderTextColor="#8A8A8A"
               secureTextEntry
-              style={styles.input}
               textContentType="password"
               value={password}
               onChangeText={setPassword}
@@ -101,23 +96,14 @@ export default function SignInScreen() {
 
           {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
 
-          <Pressable
+          <PrimaryButton
             accessibilityLabel="ログイン"
-            accessibilityRole="button"
             disabled={isSignInDisabled}
+            isLoading={isLoading}
+            label="ログインする"
             onPress={handleSignIn}
-            style={({ pressed }) => [
-              styles.submitButton,
-              isSignInDisabled && styles.submitButtonDisabled,
-              pressed && !isSignInDisabled && styles.submitButtonPressed,
-            ]}
-          >
-            {isLoading ? (
-              <ActivityIndicator color="#FFFFFF" />
-            ) : (
-              <Text style={styles.submitText}>ログインする</Text>
-            )}
-          </Pressable>
+            style={styles.submitButton}
+          />
 
           <View style={styles.footer}>
             <Text style={styles.footerText}>アカウントをお持ちでない場合</Text>
@@ -159,38 +145,13 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     color: "#555555",
   },
-  input: {
-    borderWidth: 1,
-    borderColor: "#DDDDDD",
-    borderRadius: 8,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontSize: 16,
-    color: "#222222",
-    backgroundColor: "#FFFFFF",
-  },
   errorText: {
     marginBottom: 16,
     fontSize: 14,
     color: "#C62828",
   },
   submitButton: {
-    height: 48,
-    borderRadius: 8,
-    backgroundColor: "#007AFF",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  submitButtonDisabled: {
-    backgroundColor: "#A3C1FF",
-  },
-  submitButtonPressed: {
-    backgroundColor: "#0B5ED7",
-  },
-  submitText: {
-    color: "#FFFFFF",
-    fontWeight: "600",
-    fontSize: 16,
+    marginTop: 8,
   },
   footer: {
     marginTop: 32,

@@ -1,24 +1,16 @@
+import FormTextInput from "@/components/FormTextInput";
+import OptionGroup, { type OptionGroupOption } from "@/components/OptionGroup";
+import PrimaryButton from "@/components/PrimaryButton";
+import Section from "@/components/Section";
+import TextArea from "@/components/TextArea";
+import { useSession } from "@/hooks/useSession";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import {
-  Alert,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-
-import OptionGroup, {
-  type OptionGroupOption,
-} from "@/components/OptionGroup";
-import Section from "@/components/Section";
-import { useSession } from "@/hooks/useSession";
 
 const FAMILY_COMPOSITION_OPTIONS: OptionGroupOption[] = [
   { label: "一人暮らし", value: "single" },
@@ -107,19 +99,14 @@ export default function ProfileSettingsScreen() {
             title="アレルギー・避けたい食材"
             description="コンマ区切りで入力してください。例: 卵, 乳製品"
           >
-            <TextInput
+            <FormTextInput
               placeholder="アレルギーがあれば入力してください"
-              placeholderTextColor="#8A8A8A"
-              style={styles.textInput}
               value={allergies}
               onChangeText={setAllergies}
             />
           </Section>
 
-          <Section
-            title="健康志向"
-            description="献立提案の方針に影響します。"
-          >
+          <Section title="健康志向" description="献立提案の方針に影響します。">
             <OptionGroup
               options={HEALTH_PRIORITY_OPTIONS}
               selectedValue={healthPriority}
@@ -150,35 +137,22 @@ export default function ProfileSettingsScreen() {
             title="その他メモ"
             description="家族の好みや避けたい調理法などがあれば入力してください。"
           >
-            <TextInput
+            <TextArea
               placeholder="メモがあれば入力してください"
-              placeholderTextColor="#8A8A8A"
-              style={[styles.textInput, styles.textArea]}
+              style={styles.textArea}
               value={memo}
               onChangeText={setMemo}
-              multiline
-              textAlignVertical="top"
             />
           </Section>
         </ScrollView>
 
-        <View
-          style={[
-            styles.footer,
-            { paddingBottom: 16 + insets.bottom },
-          ]}
-        >
-          <Pressable
-            accessibilityRole="button"
+        <View style={[styles.footer, { paddingBottom: 16 + insets.bottom }]}>
+          <PrimaryButton
             accessibilityLabel="プロフィール設定を保存する"
+            label="保存する"
             onPress={handleSave}
-            style={({ pressed }) => [
-              styles.saveButton,
-              pressed && styles.saveButtonPressed,
-            ]}
-          >
-            <Text style={styles.saveButtonText}>保存する</Text>
-          </Pressable>
+            style={styles.saveButton}
+          />
         </View>
       </View>
     </SafeAreaView>
@@ -207,16 +181,6 @@ const styles = StyleSheet.create({
     color: "#222222",
     marginBottom: 24,
   },
-  textInput: {
-    borderWidth: 1,
-    borderColor: "#DDDDDD",
-    borderRadius: 10,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 15,
-    color: "#222222",
-    backgroundColor: "#FFFFFF",
-  },
   textArea: {
     minHeight: 120,
   },
@@ -228,18 +192,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
   },
   saveButton: {
-    height: 52,
-    borderRadius: 12,
-    backgroundColor: "#007AFF",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  saveButtonPressed: {
-    backgroundColor: "#0B5ED7",
-  },
-  saveButtonText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "700",
+    width: "100%",
   },
 });
