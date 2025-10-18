@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import {
   Alert,
-  KeyboardAvoidingView,
-  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -12,7 +10,10 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 import { useSession } from "@/hooks/useSession";
 
@@ -54,6 +55,7 @@ const DELI_USAGE_OPTIONS: Option[] = [
 export default function ProfileSettingsScreen() {
   const router = useRouter();
   const { session, isSessionLoading } = useSession();
+  const insets = useSafeAreaInsets();
 
   const [familyComposition, setFamilyComposition] = useState<string | null>(
     null
@@ -81,12 +83,13 @@ export default function ProfileSettingsScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-      >
+      <View style={styles.container}>
         <ScrollView
-          contentContainerStyle={styles.scrollContent}
+          style={styles.scrollView}
+          contentContainerStyle={[
+            styles.scrollContent,
+            { paddingBottom: 120 + insets.bottom },
+          ]}
           keyboardShouldPersistTaps="handled"
         >
           <Text style={styles.title}>プロフィール設定</Text>
@@ -161,7 +164,12 @@ export default function ProfileSettingsScreen() {
           </Section>
         </ScrollView>
 
-        <View style={styles.footer}>
+        <View
+          style={[
+            styles.footer,
+            { paddingBottom: 16 + insets.bottom },
+          ]}
+        >
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="プロフィール設定を保存する"
@@ -174,7 +182,7 @@ export default function ProfileSettingsScreen() {
             <Text style={styles.saveButtonText}>保存する</Text>
           </Pressable>
         </View>
-      </KeyboardAvoidingView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -251,6 +259,9 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 24,
     paddingBottom: 24,
+  },
+  scrollView: {
+    flex: 1,
   },
   title: {
     fontSize: 24,
