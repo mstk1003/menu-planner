@@ -44,5 +44,5 @@
 - 認証基盤は Supabase を利用する。クライアントは `@/lib/supabase` のシングルトンから作成し、`EXPO_PUBLIC_SUPABASE_URL` と `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` を `.env` で提供する。
 - 画面全体でセッションを共有するため、`SessionProvider` (`@/hooks/useSession`) を `app/_layout.tsx` で `<Stack />` を包むように配置している。これにより初期ロードと `onAuthStateChange` のイベントを通して常に最新の `Session` を React Context に保つ。
 - 各画面でセッションにアクセスする場合は `useSession()` を利用する。返り値には `session`（`Session | null`）と初期化完了までの `isSessionLoading` が含まれる。Provider の外で呼ぶとエラーになるため、ルート以外で Provider を重ねないこと。
-- 認証必須の画面では、`isSessionLoading` が `false` かつ `session` が `null` のときに `router.replace("/login")` でログイン画面へ遷移させる。例としてトップ画面 `app/index.tsx` は未ログイン時に自動でログインへリダイレクトし、セッションがある場合のみ本文を表示する。
-- ログイン処理は `app/login.tsx` で `supabase.auth.signInWithPassword` を呼び出し、成功後に `router.replace("/")` でホームへ戻す。セッションは Provider が自動的に更新し、他画面でも即座に参照できる。
+- 認証必須の画面では、`isSessionLoading` が `false` かつ `session` が `null` のときに `router.replace("/sign-in")` でログイン画面へ遷移させる。例としてトップ画面 `app/index.tsx` は未ログイン時に自動でログインへリダイレクトし、セッションがある場合のみ本文を表示する。
+- ログイン処理は `app/sign-in.tsx` で `supabase.auth.signInWithPassword` を呼び出し、成功後に `router.replace("/")` でホームへ戻す。セッションは Provider が自動的に更新し、他画面でも即座に参照できる。

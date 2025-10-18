@@ -10,7 +10,7 @@ export default function IndexScreen() {
 
   useEffect(() => {
     if (!isSessionLoading && !session) {
-      router.replace("/login");
+      router.replace("/sign-in");
     }
   }, [isSessionLoading, router, session]);
 

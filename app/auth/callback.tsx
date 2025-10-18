@@ -32,7 +32,7 @@ export default function AuthCallbackScreen() {
   }
 
   const handleOpenLogin = () => {
-    router.replace("/login");
+    router.replace("/sign-in");
   };
 
   return (

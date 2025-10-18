@@ -15,19 +15,19 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { MIN_PASSWORD_LENGTH } from "@/constants/auth";
 import { supabase } from "@/lib/supabase";
 
-export default function LoginScreen() {
+export default function SignInScreen() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const isLoginDisabled = useMemo(() => {
+  const isSignInDisabled = useMemo(() => {
     return !email.trim() || password.length < MIN_PASSWORD_LENGTH || isLoading;
   }, [email, isLoading, password.length]);
 
-  const handleLogin = async () => {
-    if (isLoginDisabled) {
+  const handleSignIn = async () => {
+    if (isSignInDisabled) {
       return;
     }
 
@@ -104,12 +104,12 @@ export default function LoginScreen() {
           <Pressable
             accessibilityLabel="ログイン"
             accessibilityRole="button"
-            disabled={isLoginDisabled}
-            onPress={handleLogin}
+            disabled={isSignInDisabled}
+            onPress={handleSignIn}
             style={({ pressed }) => [
               styles.submitButton,
-              isLoginDisabled && styles.submitButtonDisabled,
-              pressed && !isLoginDisabled && styles.submitButtonPressed,
+              isSignInDisabled && styles.submitButtonDisabled,
+              pressed && !isSignInDisabled && styles.submitButtonPressed,
             ]}
           >
             {isLoading ? (
