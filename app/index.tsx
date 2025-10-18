@@ -31,6 +31,11 @@ export default function IndexScreen() {
     setIsMenuOpen(false);
   };
 
+  const handleNavigateToProfile = () => {
+    setIsMenuOpen(false);
+    router.push("/profile");
+  };
+
   if (isSessionLoading || !session) {
     return null;
   }
@@ -52,11 +57,19 @@ export default function IndexScreen() {
             <View style={styles.menuContainer}>
               <Pressable
                 accessibilityRole="button"
+                accessibilityLabel="プロフィール設定を開く"
+                onPress={handleNavigateToProfile}
+                style={styles.menuButton}
+              >
+                <Text style={styles.menuPrimaryText}>プロフィール設定</Text>
+              </Pressable>
+              <Pressable
+                accessibilityRole="button"
                 accessibilityLabel="サインアウトする"
                 onPress={handleSignOut}
                 style={styles.menuButton}
               >
-                <Text style={styles.menuText}>Sign out</Text>
+                <Text style={styles.menuDestructiveText}>Sign out</Text>
               </Pressable>
             </View>
           ) : null}
@@ -109,7 +122,12 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 4,
   },
-  menuText: {
+  menuPrimaryText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#222222",
+  },
+  menuDestructiveText: {
     fontSize: 14,
     fontWeight: "600",
     color: "#D22B2B",
