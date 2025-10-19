@@ -18,6 +18,7 @@ import {
   HEALTH_PRIORITY_OPTIONS,
 } from "@/features/profile/constants";
 import { useSession } from "@/hooks/useSession";
+import { supabase } from "@/lib/supabase";
 
 export default function ProfileSettingsScreen() {
   const router = useRouter();
@@ -32,6 +33,7 @@ export default function ProfileSettingsScreen() {
   const [deliUsage, setDeliUsage] = useState<string | null>(null);
   const [allergies, setAllergies] = useState("");
   const [memo, setMemo] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (!isSessionLoading && !session) {
@@ -39,9 +41,52 @@ export default function ProfileSettingsScreen() {
     }
   }, [isSessionLoading, router, session]);
 
-  const handleSave = () => {
-    // TODO: Persist profile settings to Supabase.
-    Alert.alert("保存しました", "プロフィール設定を更新しました。");
+  const handleSave = async () => {
+    if (isSaving) {
+      return;
+    }
+
+    if (!session?.user) {
+      Alert.alert(
+        "保存に失敗しました",
+        "ログイン情報を確認できませんでした。再度ログインしてください。"
+      );
+      return;
+    }
+
+    setIsSaving(true);
+
+    try {
+      const trimmedAllergies = allergies.trim();
+      const trimmedMemo = memo.trim();
+
+      const { error } = await supabase.from("profiles").upsert(
+        {
+          id: session.user.id,
+          family_composition: familyComposition,
+          allergies: trimmedAllergies ? trimmedAllergies : null,
+          health_priority: healthPriority,
+          cooking_skill: cookingSkill,
+          deli_usage: deliUsage,
+          memo: trimmedMemo ? trimmedMemo : null,
+        },
+        { onConflict: "id" }
+      );
+
+      if (error) {
+        throw error;
+      }
+
+      Alert.alert("保存しました", "プロフィール設定を更新しました。");
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "予期せぬエラーが発生しました。時間を置いて再度お試しください。";
+      Alert.alert("保存に失敗しました", message);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   if (isSessionLoading || !session) {
@@ -128,6 +173,7 @@ export default function ProfileSettingsScreen() {
             accessibilityLabel="プロフィール設定を保存する"
             label="保存する"
             onPress={handleSave}
+            isLoading={isSaving}
             style={styles.saveButton}
           />
         </View>
