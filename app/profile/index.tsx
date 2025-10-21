@@ -1,6 +1,14 @@
+import { useFocusEffect } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -34,12 +42,81 @@ export default function ProfileSettingsScreen() {
   const [allergies, setAllergies] = useState("");
   const [memo, setMemo] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [isProfileLoading, setIsProfileLoading] = useState(false);
+  const [hasLoadedProfile, setHasLoadedProfile] = useState(false);
 
   useEffect(() => {
     if (!isSessionLoading && !session) {
       router.replace("/sign-in");
     }
   }, [isSessionLoading, router, session]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!session?.user) {
+        return;
+      }
+
+      let isActive = true;
+
+      const fetchProfile = async () => {
+        setIsProfileLoading(true);
+
+        try {
+          const { data, error } = await supabase
+            .from("profiles")
+            .select(
+              "family_composition, allergies, health_priority, cooking_skill, deli_usage, memo"
+            )
+            .eq("id", session.user.id)
+            .maybeSingle();
+
+          if (!isActive) {
+            return;
+          }
+
+          if (error) {
+            throw error;
+          }
+
+          if (data) {
+            setFamilyComposition(data.family_composition ?? null);
+            setAllergies(data.allergies ?? "");
+            setHealthPriority(data.health_priority ?? null);
+            setCookingSkill(data.cooking_skill ?? null);
+            setDeliUsage(data.deli_usage ?? null);
+            setMemo(data.memo ?? "");
+          } else {
+            setFamilyComposition(null);
+            setAllergies("");
+            setHealthPriority(null);
+            setCookingSkill(null);
+            setDeliUsage(null);
+            setMemo("");
+          }
+        } catch (error) {
+          if (isActive) {
+            const message =
+              error instanceof Error
+                ? error.message
+                : "予期せぬエラーが発生しました。時間を置いて再度お試しください。";
+            Alert.alert("読み込みに失敗しました", message);
+          }
+        } finally {
+          if (isActive) {
+            setIsProfileLoading(false);
+            setHasLoadedProfile(true);
+          }
+        }
+      };
+
+      fetchProfile();
+
+      return () => {
+        isActive = false;
+      };
+    }, [session])
+  );
 
   const handleSave = async () => {
     if (isSaving) {
@@ -77,6 +154,9 @@ export default function ProfileSettingsScreen() {
         throw error;
       }
 
+      setAllergies(trimmedAllergies);
+      setMemo(trimmedMemo);
+
       Alert.alert("保存しました", "プロフィール設定を更新しました。");
     } catch (error) {
       const message =
@@ -91,6 +171,16 @@ export default function ProfileSettingsScreen() {
 
   if (isSessionLoading || !session) {
     return null;
+  }
+
+  if (isProfileLoading && !hasLoadedProfile) {
+    return (
+      <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#007AFF" />
+        </View>
+      </SafeAreaView>
+    );
   }
 
   return (
@@ -174,6 +264,7 @@ export default function ProfileSettingsScreen() {
             label="保存する"
             onPress={handleSave}
             isLoading={isSaving}
+            disabled={isSaving || isProfileLoading}
             style={styles.saveButton}
           />
         </View>
@@ -197,6 +288,13 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+  },
+  loadingContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 24,
+    backgroundColor: "#FFFFFF",
   },
   title: {
     fontSize: 24,
